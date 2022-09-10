@@ -4,16 +4,27 @@
   "description": "A final project for the web development course",
   "main": "app.js",
   "scripts": {
+    "start": "node ./bin/www",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/aviadshimoni/webdev-final-project.git"
   },
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "cookie-parser": "^1.4.3",
+    "debug": "^4.1.1",
+    "ejs": "^3.0.1",
+    "express": "^4.15.5",
+    "mongoose": "^5.9.5",
+    "morgan": "^1.8.2",
+    "serve-favicon": "^2.4.5"
+  },
   "keywords": [
     "ajax"
   ],
-  "author": "rest",
+  "author": "Aviad, Tzivka, Omer and Moran",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/aviadshimoni/webdev-final-project/issues"
