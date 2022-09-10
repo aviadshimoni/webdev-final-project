@@ -1,0 +1,22 @@
+{
+  "name": "webdev-final-project",
+  "version": "1.0.0",
+  "description": "A final project for the web development course",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aviadshimoni/webdev-final-project.git"
+  },
+  "keywords": [
+    "ajax"
+  ],
+  "author": "rest",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aviadshimoni/webdev-final-project/issues"
+  },
+  "homepage": "https://github.com/aviadshimoni/webdev-final-project#readme"
+}
