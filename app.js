@@ -1,48 +1,62 @@
-let express = require('express');
-let path = require('path');
-let favicon = require('serve-favicon');
-let logger = require('morgan');
-let cookieParser = require('cookie-parser');
-let bodyParser = require('body-parser');
+var cookieParser = require('cookie-parser');
+var createError = require('http-errors');
+var express = require('express');
+var LocalStrategy = require('passport-local').Strategy;
+var logger = require('morgan');
+var mongoose = require('mongoose');
+var passport = require('passport');
+var path = require('path');
 
-let index = require('./routes/index');
-//let users = require('./routes/users');
-let mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/detail');
+var indexRouter = require('./app_server/routes/index');
+var usersRouter = require('./app_server/routes/users');
 
-let app = express();
+var app = express();
 
 // view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'app_server' ,'views'));
+app.set('view engine', 'pug');
 
-// uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(require('express-session')({
+  secret: 'agilewebproject',
+  resave: false,
+  saveUninitialized: false
+}));
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', index);
-//app.use('/users', users);
+// define the route files that are going to be used containing the endpoints
+app.use('/', indexRouter);
+app.use('/users', usersRouter);
+
+// passport config
+var Account = require('./app_server/models/account');
+passport.use(new LocalStrategy({ 
+  usernameField: 'email',
+  passwordField: 'password'
+}, Account.authenticate()));
+passport.serializeUser(Account.serializeUser());
+passport.deserializeUser(Account.deserializeUser());
 
 // catch 404 and forward to error handler
-app.use((req, res, next) => {
-    let err = new Error('Not Found');
-    err.status = 404;
-    next(err);
+app.use(function(req, res, next) {
+  next(createError(404));
 });
 
 // error handler
-app.use((err, req, res, next) => {
-    // set locals, only providing error in development
-    res.locals.message = err.message;
-    res.locals.error = req.app.get('env') === 'development' ? err : {};
+app.use(function(err, req, res, next) {
+  // set locals, only providing error in development
+  res.locals.message = err.message;
+  res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-    // render the error page
-    res.status(err.status || 500);
-    res.render('error');
+  // render the error page
+  res.status(err.status || 500);
+  res.render('error');
 });
 
+require('./app_server/models/db');
 module.exports = app;
